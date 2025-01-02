@@ -4,11 +4,14 @@ from paddleocr import PaddleOCR
 from PIL import Image, ImageEnhance
 import glob
 import os
+ 
 class OCRProcessor(path):
     
     def __init__(self):
          self.images_files = self.detect_images(path)
          
+
+
     def _detect_images(self, temp_folder_path):
 
     # Buscar todos los archivos en la carpeta que son imágenes
@@ -41,6 +44,7 @@ class OCRProcessor(path):
         
     def ocr(path):
     # Inicializar OCR
+        
         ocr = PaddleOCR(lang='es')  # Cambia el idioma según sea necesario
 
     # Procesar una imagen
@@ -54,5 +58,4 @@ class OCRProcessor(path):
 
 if __name__ =='__main__':
     path = 'temp/'
-    detect_images(path)
 
