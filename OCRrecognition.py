@@ -2,60 +2,53 @@ import cv2
 import numpy as np
 from paddleocr import PaddleOCR
 from PIL import Image, ImageEnhance
-import glob
-import os
- 
-class OCRProcessor(path):
-    
+from io import BytesIO
+
+class OCRProcessor:
     def __init__(self):
-         self.images_files = self.detect_images(path)
-         
+        self.ocr = PaddleOCR(lang='es')  # Cambia el idioma según sea necesario
 
+    def preprocess_image(self, image_bytes):
+        """
+        Preprocesa una imagen desde bytes.
+        """
+        image = Image.open(BytesIO(image_bytes)).convert("RGB")
 
-    def _detect_images(self, temp_folder_path):
+        # Convertir a escala de grises
+        image = image.convert("L")
 
-    # Buscar todos los archivos en la carpeta que son imágenes
-        image_files = [
-            file for file in glob.glob(os.path.join(temp_folder_path, "*")) 
-            if file.lower().endswith((".jpg", ".jpeg", ".png"))
-        ]
+        # Aumentar el contraste
+        enhancer = ImageEnhance.Contrast(image)
+        image = enhancer.enhance(2)  # Ajusta el nivel según sea necesario
+        image_np = np.array(image)
+        return image_np
 
-    # Mostrar los archivos de imagen
-        print("Archivos de imagen encontrados:")
-        for file in image_files:
-            print(file)
-        return image_files
+    def ocr_process(self, image_bytes):
+        """
+        Realiza OCR en una imagen proporcionada como bytes.
+        """
+        # Preprocesar la imagen
+        processed_image = self.preprocess_image(image_bytes)
+        # Convertir la imagen procesada a un archivo temporal en formato requerido por PaddleOCR
+        #processed_image.save(temp_path)
 
+        # Procesar la imagen con PaddleOCR
+        results = self.ocr.ocr(processed_image)
 
-    def preprocess_image(self):
-            for path in self.images_files:
-                image = Image.open(path).convert("RGB")
+        # Imprimir los resultados
+        extracted_text = " ".join([line[1][0] for line in results[0]])
+        #for line in results[0]:
+        #    print(f"Texto: {line[1][0]} | Confianza: {line[1][1]}")
 
-                # Convertir a escala de grises
-                image = image.convert("L")
+        return extracted_text
 
-                # Aumentar el contraste
-                enhancer = ImageEnhance.Contrast(image)
-                image = enhancer.enhance(2)  # Ajusta el nivel según sea necesario
+if __name__ == '__main__':
+    # Simulación: Lee una imagen como bytes
+    with open("temp/DNI_Enrique_Delgado.png", "rb") as f:  # Cambia por el archivo real que quieras usar
+        image_bytes = f.read()
 
-                # Guardar la imagen procesada (opcional)
-                image.save("documento_procesado.png")
+    # Procesar la imagen con OCRProcessor
+    processor = OCRProcessor()
+    text = processor.ocr_process(image_bytes)
 
-        
-    def ocr(path):
-    # Inicializar OCR
-        
-        ocr = PaddleOCR(lang='es')  # Cambia el idioma según sea necesario
-
-    # Procesar una imagen
-        results = ocr.ocr(path)
-
-    # Imprimir los resultados
-        for line in results[0]:
-            print("Texto:", line[1][0], "| Confianza:", line[1][1])
-        return " ".join([line[1][0] for line in results[0]])
-
-
-if __name__ =='__main__':
-    path = 'temp/'
-
+    print("Texto extraído:", text)
