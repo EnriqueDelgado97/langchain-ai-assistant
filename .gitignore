@@ -3,3 +3,4 @@ pyenv/
 temp/
 *.ipynb
 *__pycache__/
+*.mmd
