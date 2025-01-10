@@ -77,7 +77,7 @@ def create_tool_selector_agent():
     return prompt | llm
 
 
-# Segundo agente: Extrae información personal
+# Segundo agente: Extrae informacion personal
 def create_personal_data_extractor_agent():
     llm = ChatOpenAI(model="gpt-3.5-turbo")
 
@@ -110,7 +110,7 @@ def process_input(file_bytes: bytes) -> dict:
     tool_selector_agent = create_tool_selector_agent()
     personal_data_extractor_agent = create_personal_data_extractor_agent()
 
-    # Agente 1: Selección de herramienta y transcripción
+    # Agente 1: Seleccion de herramienta y transcripcion
     tool_selector_input = {
         "messages": [
             {
@@ -122,7 +122,7 @@ def process_input(file_bytes: bytes) -> dict:
     }
     extracted_text = tool_selector_agent.invoke(tool_selector_input)["content"]
 
-    # Agente 2: Extracción de datos personales
+    # Agente 2: Extraccion de datos personales
     personal_data_input = {
         "messages": [
             {
@@ -144,7 +144,7 @@ class State(TypedDict):
 def agent_node(state, agent, name):
     result = agent.invoke(state)
     if isinstance(result, ToolMessage):
-        # Si el agente invoca una herramienta, devuelve el resultado como está
+        # Si el agente invoca una herramienta, devuelve el resultado como esta
         pass
     else:
         # Si el resultado es un mensaje AI, lo ajustamos con el nombre del agente
@@ -163,7 +163,7 @@ def router(state) -> Literal["call_tool", "__end__", "continue"]:
     messages = state["messages"]
     last_message = messages[-1]
     if last_message.tool_calls:
-        # Si el último mensaje incluye una invocación de herramienta, llama a la herramienta
+        # Si el ultimo mensaje incluye una invocacion de herramienta, llama a la herramienta
         return "call_tool"
     return "continue"
 
@@ -187,7 +187,7 @@ workflow.add_conditional_edges(
     {"ToolSelector": "ToolSelector"}
 )
 
-# Agregar transiciones estándar
+# Agregar transiciones estandar
 workflow.add_edge(START, "ToolSelector")
 workflow.add_edge("PersonalDataExtractor", END)
 
@@ -210,6 +210,11 @@ events = graph.stream(initial_state, {"recursion_limit": 150})
 
 # Imprimir cada evento
 for event in events:
-    print(event)
-    print("----")
+    for node, data in event.items():
+        # Imprimir solo el contenido del mensaje (si existe)
+        if "messages" in data:
+            for message in data["messages"]:
+                if hasattr(message, "content"):
+                    print(f"{node}: {message.content}")    
+
 

@@ -6,7 +6,7 @@ from io import BytesIO
 
 class OCRProcessor:
     def __init__(self):
-        self.ocr = PaddleOCR(lang='es')  # Cambia el idioma según sea necesario
+        self.ocr = PaddleOCR(lang='es')  # Cambia el idioma segun sea necesario
 
     def preprocess_image(self, image_bytes):
         """
@@ -19,7 +19,7 @@ class OCRProcessor:
 
         # Aumentar el contraste
         enhancer = ImageEnhance.Contrast(image)
-        image = enhancer.enhance(2)  # Ajusta el nivel según sea necesario
+        image = enhancer.enhance(2)  # Ajusta el nivel segun sea necesario
         image_np = np.array(image)
         return image_np
 
@@ -43,7 +43,7 @@ class OCRProcessor:
         return extracted_text
 
 if __name__ == '__main__':
-    # Simulación: Lee una imagen como bytes
+    # Simulacion: Lee una imagen como bytes
     with open("temp/DNI_Enrique_Delgado.png", "rb") as f:  # Cambia por el archivo real que quieras usar
         image_bytes = f.read()
 
@@ -51,4 +51,4 @@ if __name__ == '__main__':
     processor = OCRProcessor()
     text = processor.ocr_process(image_bytes)
 
-    print("Texto extraído:", text)
+    print("Texto extraido:", text)

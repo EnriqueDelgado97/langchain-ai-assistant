@@ -12,7 +12,7 @@ class AudioTranscriber:
         processor = WhisperProcessor.from_pretrained("openai/whisper-small")
         forced_decoder_ids = processor.get_decoder_prompt_ids(language="spanish", task="transcribe")
         return OpenAIWhisperParserLocal(
-            device="cpu",  # CPU se usa automáticamente
+            device="cpu",  # CPU se usa automaticamente
             lang_model="openai/whisper-small",  # Modelo ligero para CPU
             batch_size=4,  # Ajustar para hardware modesto
             chunk_length=30,  # Procesar en fragmentos de 30 segundos
@@ -21,7 +21,7 @@ class AudioTranscriber:
 
     def transcribe_audio(self, audio_bytes):
         """
-        Procesa un archivo de audio en formato bytes y realiza la transcripción.
+        Procesa un archivo de audio en formato bytes y realiza la transcripcion.
         """
         # Guardar los bytes en memoria como un archivo de audio compatible
         with BytesIO(audio_bytes) as audio_file:
@@ -33,7 +33,7 @@ class AudioTranscriber:
         return transcription_result
 
 if __name__ == '__main__':
-    # Simulación: Lee un archivo de audio como bytes
+    # Simulacion: Lee un archivo de audio como bytes
     with open("temp/tmpnlomzk0e.wav", "rb") as f:  # Cambia por un archivo real
         audio_bytes = f.read()
 
@@ -41,4 +41,4 @@ if __name__ == '__main__':
     transcriber = AudioTranscriber()
     transcription = transcriber.transcribe_audio(audio_bytes)
 
-    print("Transcripción:", transcription)
+    print("Transcripcion:", transcription)
