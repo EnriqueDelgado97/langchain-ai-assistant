@@ -196,7 +196,7 @@ graph = workflow.compile()
 graph_representation = graph.get_graph().draw_mermaid()
 
 
-file_path = "temp/DNI_Enrique_Delgado.png"
+file_path = "temp/tmpnlomzk0e.wav"
 # Estado inicial
 initial_state = {
     "messages": [
